@@ -25,12 +25,13 @@ const POS_INDEX_MAP = {
   4: 3,
   5: 2,
 };
-const EMOTION_LIST = ["react", "mad"];
+const EMOTION_LIST = ["react", "mad", "kira", "music"];
 (() => {
   let pointer = -1
   let config = {}
   let resource = {}
   let pixi = null
+  let lock = false
   const _map = new Map();
 
   function load(_config, _pixi, onSuccess) {
@@ -47,6 +48,39 @@ const EMOTION_LIST = ["react", "mad"];
     _map.set("Title", title)
     _map.set("Place", place)
     _map.set("Script", script)
+    _map.set("Select", select)
+    _map.set("EffectScript", effectScript)
+    _map.set("Wait", wait)
+    _map.set("HideALL", hideAll)
+  }
+
+  function hideAll(now) {
+    Reactive.specialItem.title = ""
+    Reactive.specialItem.titleOpacity = 0
+    Reactive.specialItem.place = ""
+    Reactive.specialItem.placeOpacity = 0
+    Reactive.specialItem.chat.content = ""
+    Reactive.specialItem.chat.contentVisible = false
+    Reactive.specialItem.chat.studentName = ""
+    Reactive.specialItem.chat.studentBelong = ""
+    Reactive.specialItem.showSelect = false
+    Reactive.specialItem.selectGroup = []
+    clear()
+    Object.keys(resource).forEach(key => {
+      resource[key].visible = false
+    })
+    setTimeout(() => {
+      debugger
+      next()
+    }, Number(now.text))
+  }
+
+  function wait(now) {
+    lock = true;
+    setTimeout(() => {
+      lock = false
+      next()
+    }, Number(now.text))
   }
 
   function loadResource(list) {
@@ -118,16 +152,18 @@ const EMOTION_LIST = ["react", "mad"];
   }
 
   function next(arg) {
+    if (lock) {
+      return;
+    }
     if (pointer === -1) {
       return
     }
-    clear()
     if (arg && arg.step) {
       pointer += arg.step
     }
     let now = config.content[pointer]
     if (arg && arg.select) {
-      while (now.select !== arg.select) {
+      while (now.select !== arg.select && pointer < config.content.length - 1) {
         pointer++
         now = config.content[pointer]
       }
@@ -155,8 +191,8 @@ const EMOTION_LIST = ["react", "mad"];
   function place(now) {
     faceInOut(now, "place", () => {
     }, 2500)
-    next({
-      step: 1
+    setTimeout(() => {
+      next()
     })
   }
 
@@ -179,6 +215,7 @@ const EMOTION_LIST = ["react", "mad"];
 
   function script(now) {
     if (now.character && now.face) {
+      hideResource(now.character)
       const name = buildCharacterName(now.character, now.face)
       if (resource[name] && !resource[name].visible) {
         const fadeIn = now.script && now.script.some(item => item.type === "appear")
@@ -209,6 +246,10 @@ const EMOTION_LIST = ["react", "mad"];
         }
         showChatContent(now)
       }
+    } else {
+      Reactive.specialItem.chat.contentVisible = true;
+      Reactive.specialItem.chatDialogVisible = true;
+      Reactive.specialItem.chat.content = now.text;
     }
   }
 
@@ -216,13 +257,30 @@ const EMOTION_LIST = ["react", "mad"];
     const name = buildCharacterName(now.character, now.face)
     now.script.forEach(item => {
       setTimeout(() => {
-        Effect.action(item.type, resource[item.type], EFFECT_POS_MAP[now.pos], resource[name].y)
+        Effect.action(item.type, resource[item.type] || resource[name], EFFECT_POS_MAP[now.pos], resource[name].y, item.args)
+      })
+    })
+  }
+
+  function effectScript(now) {
+    const name = buildCharacterName(now.character, now.face)
+    now.script.forEach(item => {
+      setTimeout(() => {
+        if (item.type === "disappear") {
+          Effect.action(item.type, resource[name], Number(now.text), () => {
+            next()
+          })
+        } else {
+          Effect.action(item.type, resource[item.type] || resource[name], EFFECT_POS_MAP[now.pos], resource[name].y, item.args)
+        }
       })
     })
   }
 
   function select(now) {
-
+    const selection = now.text.split("\n").map(item => item.trim())
+    Reactive.specialItem.showSelect = true;
+    Reactive.specialItem.selectGroup = selection;
   }
 
   function doSelect(selection) {
@@ -232,6 +290,7 @@ const EMOTION_LIST = ["react", "mad"];
   }
 
   function showChatContent(now, speed = 50) {
+    clear()
     const text = now.text
     const speaker = CHARACTER_TO_IMAGE[now.character]
     const belong = CHARACTER_TO_BELONG[now.character]
@@ -241,7 +300,7 @@ const EMOTION_LIST = ["react", "mad"];
     Reactive.specialItem.chat.studentBelong = belong;
     let pointer = 0
     let handler = setInterval(() => {
-      Reactive.specialItem.chat.content = text.slice(0, pointer++);
+      Reactive.specialItem.chat.content = text.slice(0, ++pointer);
       if (pointer === text.length) {
         clearInterval(handler)
       }
@@ -250,6 +309,14 @@ const EMOTION_LIST = ["react", "mad"];
 
   function buildCharacterName(character, face) {
     return character + "_" + face
+  }
+
+  function hideResource(name) {
+    Object.keys(resource).forEach(key => {
+      if (key.startsWith(name)) {
+        resource[key].visible = false;
+      }
+    })
   }
 
   function displayResource(name, config) {
@@ -291,6 +358,8 @@ const EMOTION_LIST = ["react", "mad"];
     // Reactive.specialItem.chat.contentVisible = false
     // Reactive.specialItem.chat.studentName = ""
     // Reactive.specialItem.chat.studentBelong = ""
+    Reactive.specialItem.showSelect = false
+    Reactive.specialItem.selectGroup = []
     EMOTION_LIST.forEach(name => {
       if (resource[name]) {
         resource[name].visible = false;

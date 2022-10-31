@@ -1,6 +1,6 @@
 const FAKE_NETWORK_TIMEOUT = 1000
-const RESOURCE_BASE_URL = "https://arona.diyigemt.com/image/scenario/"
-const RESOURCE_EMOTION_BASE_URL = "https://arona.diyigemt.com/image/scenario/emotion/"
+const RESOURCE_BASE_URL = "https://arona.cdn.diyigemt.com/image/scenario/"
+const RESOURCE_EMOTION_BASE_URL = "https://arona.cdn.diyigemt.com/image/scenario/emotion/"
 const FAKE_SCENARIO_DATA = {
   base: {
     title: "沉睡的鯨魚",
@@ -17,7 +17,7 @@ const FAKE_SCENARIO_DATA = {
     type: "Script",
     pos: 3,
     character: "hoshino",
-    face: 12,
+    face: 3,
     script: [{
       type: "react"
     }, {
@@ -31,16 +31,86 @@ const FAKE_SCENARIO_DATA = {
     type: "Script",
     character: "hoshino",
     pos: 3,
-    face: 7,
+    face: 17,
     select: 1,
     text: "啊啊。原來老師你也完全不懂浪漫呢。"
   }, {
     type: "Script",
     character: "hoshino",
     pos: 3,
-    face: 7,
+    face: 17,
     select: 2,
     text: "啊啊。原來老師你也完全不懂浪漫呢。"
+  }, {
+    type: "Script",
+    character: "hoshino",
+    pos: 3,
+    face: 2,
+    script: [{
+      type: "music"
+    }],
+    text: "呃嘿～其實是因為我有件事需要一點人手幫忙，有個東西我自己一個人搬不動。"
+  }, {
+    type: "Script",
+    character: "hoshino",
+    pos: 3,
+    face: 1, // TODO 改回14
+    text: "因為除了看起來很悠哉的老師以外，我想不到還有什麼人可以幫忙，所以就變成這樣子了。"
+  }, {
+    type: "Script",
+    character: "hoshino",
+    pos: 3,
+    face: 3,
+    script: [{
+      type: "hophop"
+    }, {
+      type: "kira"
+    }],
+    text: "沒想到你竟然還是願意過來，果然還是老師對我最好了。"
+  }, {
+    type: "Select",
+    text: "「如果是費力的事，是不是該叫其他成員……？」"
+  }, {
+    type: "Script",
+    character: "hoshino",
+    pos: 3,
+    face: 16,
+    select: 1,
+    text: "你不要說那種讓人難過的話嘛，這件事要對其他社員保密喔。"
+  }, {
+    type: "Script",
+    character: "hoshino",
+    pos: 3,
+    face: 3,
+    script: [{
+      type: "music"
+    }],
+    text: "好，那咱們走吧。正好學校現在空無一人，這是個好機會。"
+  }, {
+    type: "EffectScript",
+    character: "hoshino",
+    pos: 3,
+    face: 3,
+    script: [{
+      type: "disappear"
+    }],
+    text: "1.5"
+  }, {
+    type: "Wait",
+    character: "hoshino",
+    pos: 3,
+    face: 16,
+    text: "1500"
+  }, {
+    type: "HideALL",
+    text: "1500"
+  }, {
+    type: "Place",
+    bg: "bg2",
+    text: "不使用的倉庫",
+  }, {
+    type: "Script",
+    text: "（喀答答答—）"
   }, {
     type: "Script",
     character: "hoshino",
@@ -48,8 +118,10 @@ const FAKE_SCENARIO_DATA = {
     face: 12,
     script: [{
       type: "mad"
+    },{
+      type: "appear"
     }],
-    text: "呃嘿～其實是因為我有件事需要一點人手幫忙，有個東西我自己一個人搬不動。"
+    text: "咳咳、咳咳。來，就是這裡，灰塵超多的……"
   }]
 };
 function fakeTime() {

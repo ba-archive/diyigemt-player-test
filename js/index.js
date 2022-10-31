@@ -32,7 +32,11 @@ const app = createApp({
       }, 2000)
     })
     function doSelect(selection) {
-      Reactive.doSelect(selection)
+      Player.doSelect(selection)
+    }
+    function next() {
+      if (Reactive.specialItem.showSelect) return
+      Player.next()
     }
     return {
       ...toRefs(data),
@@ -40,7 +44,8 @@ const app = createApp({
       pixiContainerStyle,
       pixi,
       ...toRefs(Reactive.specialItem),
-      doSelect
+      doSelect,
+      next
     }
   }
 }).mount("#app");
