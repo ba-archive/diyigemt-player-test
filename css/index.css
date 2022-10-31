@@ -1,0 +1,129 @@
+* {
+  box-sizing: border-box;
+  --chat-dialog-height: 200px;
+}
+#app {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+#pixi {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  border: 1px solid black;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.silence {
+  user-select: none;
+  pointer-events: none;
+}
+
+.pixiContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: black;
+}
+
+.loading {
+  --font-size: 25px;
+  position: absolute;
+  font-size: var(--font-size);
+  line-height: var(--font-size);
+  bottom: 5px;
+  right: 0;
+  z-index: 999;
+}
+.title {
+  --font-size: 45px;
+  width: 100%;
+  position: absolute;
+  font-size: var(--font-size);
+  line-height: var(--font-size);
+  text-align: center;
+  top: 50%;
+  z-index: 999;
+  transform: translateY(-50%);
+  transition: opacity ease 1s;
+  opacity: 0;
+}
+.place {
+  --font-size: 20px;
+  position: absolute;
+  font-size: var(--font-size);
+  line-height: var(--font-size);
+  top: 100px;
+  padding: 10px 10px 10px 20px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background-color: rgba(0,0,0,0.3);
+  z-index: 999;
+  transition: opacity ease 1s;
+  opacity: 0;
+}
+.select {
+  position: absolute;
+  top: 50%;
+  z-index: 999;
+  transform: translateY(calc(-50% - var(--chat-dialog-height) / 2));
+  text-align: center;
+  width: 100%;
+  padding: 25%;
+}
+.select .select-item {
+  font-size: 25px;
+  margin-bottom: 16px;
+  border-radius: 5px;
+  background-color: rgba(135,201,242);
+  color: white;
+  padding: 10px 0;
+  cursor: pointer;
+}
+.select .select-item:last-child {
+  margin-bottom: 0;
+}
+.chat-dialog {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: var(--chat-dialog-height);
+  background-color: transparent;
+  z-index: 99;
+  padding: 0 150px;
+}
+.chat-dialog .name {
+  --font-size: 30px;
+  --padding: 8px;
+  --height: calc(var(--font-size) + var(--padding) * 2);
+  height: var(--height);
+  line-height: var(--font-size);
+  font-size: var(--font-size);
+  color: white;
+  padding: 8px 0;
+}
+.chat-dialog .name .belong {
+  font-size: 25px;
+  margin-left: 12px;
+  color: rgba(135,201,242);
+}
+.chat-dialog .content {
+  color: white;
+  font-size: 20px;
+  line-height: 20px;
+  padding-top: 8px;
+  white-space: break-spaces;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+.chat-dialog .divider {
+  height: 3px;
+  background-color: rgba(255,255,255,0.5);
+  content: '';
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scenario Viewer</title>
+  <!-- vue3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <!-- gsap -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/gsap.min.js"></script>
+  <!-- pixijs -->
+  <script src="https://pixijs.download/release/pixi.js"></script>
+  <script src="./js/fake.js"></script>
+  <script src="./js/reactive.js"></script>
+  <script src="./js/player.js"></script>
+  <script src="./js/effect.js"></script>
+  <link rel="stylesheet" href="./css/index.css">
+  <link rel="stylesheet" href="./css/normalize.css">
+</head>
+
+<body>
+  <div id="app">
+    <div class="pixiContainer" :style="pixiContainerStyle">
+      <div ref="pixi" id="pixi">
+        <div class="loading silence" v-if="loading">Now Loading...</div>
+        <div class="title silence" v-if="title" :style="{opacity: titleOpacity}">{{ title }}</div>
+        <div class="place silence" v-if="place" :style="{opacity: placeOpacity}">{{ place }}</div>
+        <div class="select" v-if="showSelect">
+          <div class="select-item" v-for="(e, index) in selectGroup" :key="index" @click="doSelect">{{ e }}</div>
+        </div>
+        <div class="chat-dialog" v-if="chatDialogVisible">
+          <div class="name">
+            <span>{{ chat.studentName }}</span>
+            <span v-if="chat.studentBelong" class="belong">{{ chat.studentBelong }}</span>
+          </div>
+          <div class="divider"></div>
+          <div class="content" v-if="chat.contentVisible">
+            {{ chat.content }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script src="./js/index.js"></script>
+</body>
+
+</html>
