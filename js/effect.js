@@ -35,7 +35,6 @@
       duration: speed,
       onComplete: () => {
         const complete = typeof speed === "number" ? onComplete : speed
-        debugger
         if (complete) {
           complete()
         }

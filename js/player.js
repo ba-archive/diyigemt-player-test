@@ -69,12 +69,12 @@ const EMOTION_LIST = ["react", "mad", "kira", "music"];
     const keys = Object.keys(resource).filter(item => resource[item].visible)
     keys.forEach((key, index) => {
       if (index === keys.length - 1) {
-        Effect.action("fadeOut", resource[key], () => {
+        Effect.action("fadeOut", resource[key], 1, () => {
           resource[key].visible = false
           next()
         })
       } else {
-        Effect.action("fadeOut", resource[key], () => {
+        Effect.action("fadeOut", resource[key], 1, () => {
           resource[key].visible = false
         })
       }
