@@ -16,7 +16,7 @@
       duration: 0.1
     })
   }
-  function fadeIn(sprite, speed, onComplete) {
+  function fadeIn(sprite, speed = 1, onComplete) {
     const tl = new gsap.timeline();
     tl.to(sprite, {
       alpha: 1,
@@ -24,6 +24,20 @@
       onComplete: () => {
         if (onComplete) {
           onComplete()
+        }
+      }
+    })
+  }
+  function fadeOut(sprite, speed = 1, onComplete) {
+    const tl = new gsap.timeline();
+    tl.to(sprite, {
+      alpha: 0,
+      duration: speed,
+      onComplete: () => {
+        const complete = typeof speed === "number" ? onComplete : speed
+        debugger
+        if (complete) {
+          complete()
         }
       }
     })
@@ -56,7 +70,9 @@
   function music(sprite, posX, posY) {
     generalSetting(sprite, posX, posY)
     const tlSize = new gsap.timeline();
+    tlSize.timeScale(3.3)
     const tlPos = new gsap.timeline();
+    tlPos.timeScale(3.3)
     sprite.scale.set(0.3, 0.3)
     const x = sprite.x
     const y = sprite.y
@@ -101,6 +117,7 @@
   const _map = new Map();
   _map.set("hophop", hophop)
   _map.set("fadeIn", fadeIn)
+  _map.set("fadeOut", fadeOut)
   _map.set("react", react)
   _map.set("mad", mad)
   _map.set("kira", kira)

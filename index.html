@@ -35,7 +35,7 @@
             <span>{{ chat.studentName }}</span>
             <span v-if="chat.studentBelong" class="belong">{{ chat.studentBelong }}</span>
           </div>
-          <div class="divider"></div>
+          <div class="divider" v-if="chat.contentVisible"></div>
           <div class="content" v-if="chat.contentVisible">
             {{ chat.content }}
           </div>

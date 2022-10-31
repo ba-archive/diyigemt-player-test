@@ -17,7 +17,7 @@ const FAKE_SCENARIO_DATA = {
     type: "Script",
     pos: 3,
     character: "hoshino",
-    face: 3,
+    face: 12,
     script: [{
       type: "react"
     }, {
@@ -31,21 +31,21 @@ const FAKE_SCENARIO_DATA = {
     type: "Script",
     character: "hoshino",
     pos: 3,
-    face: 17,
+    face: 7,
     select: 1,
     text: "啊啊。原來老師你也完全不懂浪漫呢。"
   }, {
     type: "Script",
     character: "hoshino",
     pos: 3,
-    face: 17,
+    face: 7,
     select: 2,
     text: "啊啊。原來老師你也完全不懂浪漫呢。"
   }, {
     type: "Script",
     character: "hoshino",
     pos: 3,
-    face: 2,
+    face: 11,
     script: [{
       type: "music"
     }],
@@ -54,13 +54,13 @@ const FAKE_SCENARIO_DATA = {
     type: "Script",
     character: "hoshino",
     pos: 3,
-    face: 1, // TODO 改回14
+    face: 10,
     text: "因為除了看起來很悠哉的老師以外，我想不到還有什麼人可以幫忙，所以就變成這樣子了。"
   }, {
     type: "Script",
     character: "hoshino",
     pos: 3,
-    face: 3,
+    face: 12,
     script: [{
       type: "hophop"
     }, {
@@ -74,14 +74,14 @@ const FAKE_SCENARIO_DATA = {
     type: "Script",
     character: "hoshino",
     pos: 3,
-    face: 16,
+    face: 13,
     select: 1,
     text: "你不要說那種讓人難過的話嘛，這件事要對其他社員保密喔。"
   }, {
     type: "Script",
     character: "hoshino",
     pos: 3,
-    face: 3,
+    face: 12,
     script: [{
       type: "music"
     }],
@@ -90,7 +90,7 @@ const FAKE_SCENARIO_DATA = {
     type: "EffectScript",
     character: "hoshino",
     pos: 3,
-    face: 3,
+    face: 12,
     script: [{
       type: "disappear"
     }],
@@ -99,14 +99,16 @@ const FAKE_SCENARIO_DATA = {
     type: "Wait",
     character: "hoshino",
     pos: 3,
-    face: 16,
+    face: 13,
     text: "1500"
   }, {
     type: "HideALL",
-    text: "1500"
   }, {
     type: "Place",
     bg: "bg2",
+    script: [{
+      type: "fadeIn"
+    }],
     text: "不使用的倉庫",
   }, {
     type: "Script",
@@ -115,7 +117,7 @@ const FAKE_SCENARIO_DATA = {
     type: "Script",
     character: "hoshino",
     pos: 3,
-    face: 12,
+    face: 5,
     script: [{
       type: "mad"
     },{

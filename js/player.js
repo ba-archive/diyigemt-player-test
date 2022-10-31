@@ -66,13 +66,19 @@ const EMOTION_LIST = ["react", "mad", "kira", "music"];
     Reactive.specialItem.showSelect = false
     Reactive.specialItem.selectGroup = []
     clear()
-    Object.keys(resource).forEach(key => {
-      resource[key].visible = false
+    const keys = Object.keys(resource).filter(item => resource[item].visible)
+    keys.forEach((key, index) => {
+      if (index === keys.length - 1) {
+        Effect.action("fadeOut", resource[key], () => {
+          resource[key].visible = false
+          next()
+        })
+      } else {
+        Effect.action("fadeOut", resource[key], () => {
+          resource[key].visible = false
+        })
+      }
     })
-    setTimeout(() => {
-      debugger
-      next()
-    }, Number(now.text))
   }
 
   function wait(now) {
@@ -167,6 +173,11 @@ const EMOTION_LIST = ["react", "mad", "kira", "music"];
         pointer++
         now = config.content[pointer]
       }
+    } else {
+      while (now.select) {
+        pointer++
+        now = config.content[pointer]
+      }
     }
     if (!now) {
       return;
@@ -175,7 +186,7 @@ const EMOTION_LIST = ["react", "mad", "kira", "music"];
     if (action) {
       // loadBG
       if (now.bg) {
-        displayResource(now.bg)
+        displayResource(now.bg, {fadeIn: now.script && now.script.some(item => item.type === "fadeIn") ? 1: undefined})
       }
       action(now)
     }

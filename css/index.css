@@ -38,6 +38,7 @@
   bottom: 5px;
   right: 0;
   z-index: 999;
+  color: white;
 }
 .title {
   --font-size: 45px;

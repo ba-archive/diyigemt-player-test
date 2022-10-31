@@ -17,9 +17,9 @@ const app = createApp({
       const pixiAPP = new PIXI.Application({
         width: config.pixiWidth,
         height: config.pixiHeight,
-        backgroundColor: 0xffffff
+        backgroundColor: 0x000000
       });
-      // pixiAPP.renderer.BackgroundSystem.color = 0x000000
+      pixiAPP.stage.sortableChildren = true
       pixi.value.appendChild(pixiAPP.view);
       setTimeout(() => {
         Functions.fetchScenarioConfig().then((config) => {
