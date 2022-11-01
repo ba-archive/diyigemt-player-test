@@ -25,7 +25,7 @@ const POS_INDEX_MAP = {
   4: 3,
   5: 2,
 };
-const EMOTION_LIST = ["react", "mad", "kira", "music"];
+const EMOTION_LIST = ["react", "mad", "kira", "music", "sweat", "heart"];
 (() => {
   let pointer = -1
   let config = {}
@@ -52,6 +52,11 @@ const EMOTION_LIST = ["react", "mad", "kira", "music"];
     _map.set("EffectScript", effectScript)
     _map.set("Wait", wait)
     _map.set("HideALL", hideAll)
+    _map.set("Home", home)
+  }
+
+  function home(now) {
+    hideAll()
   }
 
   function hideAll(now) {
@@ -69,12 +74,12 @@ const EMOTION_LIST = ["react", "mad", "kira", "music"];
     const keys = Object.keys(resource).filter(item => resource[item].visible)
     keys.forEach((key, index) => {
       if (index === keys.length - 1) {
-        Effect.action("fadeOut", resource[key], 1, () => {
+        Effect.action("fadeOut", null, resource[key], 1, () => {
           resource[key].visible = false
           next()
         })
       } else {
-        Effect.action("fadeOut", resource[key], 1, () => {
+        Effect.action("fadeOut", null, resource[key], 1, () => {
           resource[key].visible = false
         })
       }
@@ -225,8 +230,11 @@ const EMOTION_LIST = ["react", "mad", "kira", "music"];
   }
 
   function script(now) {
+    const keep = (now.script || []).some(item => item.type === "keep")
     if (now.character && now.face) {
-      hideResource(now.character)
+      if (!keep) {
+        hideResource(now.character)
+      }
       const name = buildCharacterName(now.character, now.face)
       if (resource[name] && !resource[name].visible) {
         const fadeIn = now.script && now.script.some(item => item.type === "appear")
@@ -250,7 +258,9 @@ const EMOTION_LIST = ["react", "mad", "kira", "music"];
           }
           showChatContent(now)
         }
-        displayResource(name, config)
+        if (!keep) {
+          displayResource(name, config)
+        }
       } else {
         if (now.script) {
           doScript(now)
@@ -260,15 +270,28 @@ const EMOTION_LIST = ["react", "mad", "kira", "music"];
     } else {
       Reactive.specialItem.chat.contentVisible = true;
       Reactive.specialItem.chatDialogVisible = true;
-      Reactive.specialItem.chat.content = now.text;
+      doScript(now);
+      showChatContent(now);
     }
   }
 
   function doScript(now) {
     const name = buildCharacterName(now.character, now.face)
-    now.script.forEach(item => {
+    const auto = (now.script || []).some(item => item.type === "auto")
+    const script = (now.script || []).filter(item => item.type !== "auto")
+    script.forEach((item, index) => {
+      const emotion = resource[item.type]
+      // if (emotion && emotion.parent !== pixi.stage) {
+      //   emotion.setParent(pixi.stage)
+      // }
       setTimeout(() => {
-        Effect.action(item.type, resource[item.type] || resource[name], EFFECT_POS_MAP[now.pos], resource[name].y, item.args)
+        if (auto && index === script.length - 1) {
+          Effect.action(item.type, resource[name], emotion || resource[name], EFFECT_POS_MAP[now.pos], resource[name].y, item.args, () => {
+            next()
+          })
+        } else {
+          Effect.action(item.type, resource[name], emotion || resource[name], EFFECT_POS_MAP[now.pos], resource[name].y, item.args)
+        }
       })
     })
   }
@@ -278,11 +301,15 @@ const EMOTION_LIST = ["react", "mad", "kira", "music"];
     now.script.forEach(item => {
       setTimeout(() => {
         if (item.type === "disappear") {
-          Effect.action(item.type, resource[name], Number(now.text), () => {
+          Effect.action(item.type, null, resource[name], Number(now.text), () => {
+            next()
+          })
+        } else if (item.type === "bgShake") {
+          Effect.action(item.type, null, resource[now.bg], Number(now.text), () => {
             next()
           })
         } else {
-          Effect.action(item.type, resource[item.type] || resource[name], EFFECT_POS_MAP[now.pos], resource[name].y, item.args)
+          Effect.action(item.type, null, resource[item.type] || resource[name], EFFECT_POS_MAP[now.pos], resource[name].y, item.args)
         }
       })
     })
@@ -301,6 +328,9 @@ const EMOTION_LIST = ["react", "mad", "kira", "music"];
   }
 
   function showChatContent(now, speed = 50) {
+    if (!now.text) {
+      return
+    }
     clear()
     const text = now.text
     const speaker = CHARACTER_TO_IMAGE[now.character]
@@ -334,14 +364,6 @@ const EMOTION_LIST = ["react", "mad", "kira", "music"];
     if (name) {
       const sprite = Reflect.get(resource, name)
       if (sprite) {
-        if (config && config.fadeIn) {
-          sprite.alpha = 0
-          sprite.visible = true
-          Effect.action("fadeIn", sprite, config.fadeIn, config.onComplete)
-        } else {
-          sprite.alpha = 1
-          sprite.visible = true
-        }
         if (config) {
           if (config.scale) {
             sprite.scale.set(config.scale, config.scale)
@@ -355,6 +377,14 @@ const EMOTION_LIST = ["react", "mad", "kira", "music"];
           if (config.zIndex) {
             sprite.zIndex = config.zIndex
           }
+        }
+        if (config && config.fadeIn) {
+          sprite.alpha = 0
+          sprite.visible = true
+          Effect.action("fadeIn", null, sprite, config.fadeIn, config.onComplete)
+        } else {
+          sprite.alpha = 1
+          sprite.visible = true
         }
       }
     }
@@ -390,6 +420,7 @@ const EMOTION_LIST = ["react", "mad", "kira", "music"];
     isFinish,
     showChatContent,
     title,
-    doSelect
+    doSelect,
+    displayResource
   }
 })();
